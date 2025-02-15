@@ -21,8 +21,20 @@ const Navbar = () => {
   return (
     <div className="sticky top-0 z-10 py-2 px-10 flex gap-2 justify-between items-center bg-white max-sm:px-2">
       <Link href="/">
-        <Image src="/logo.png" alt="logo" width={130} height={100} />
+        <Image src='/milogo.PNG' alt="logo" width={130} height={70} />
       </Link>
+      <div className="flex gap-4 text-lg sm:text-base">
+  <a href="tel:0792753931" className="flex items-center gap-2 sm:gap-0">
+    📞<span className="hidden sm:inline">07992753931</span>
+  </a>
+  <a href="mailto:microplug2025@gmail.com" className="flex items-center gap-2 sm:gap-0">
+    📧<span className="hidden sm:inline">Email Us</span>
+  </a>
+  <a href="https://maps.google.com/maps?q=loc:36.8291508,36.8291508
+" target="_blank" className="flex items-center gap-2 sm:gap-0">
+    🌍<span className="hidden sm:inline">Our Location</span>
+  </a>
+</div>
 
       <div className="flex gap-4 text-base-bold max-lg:hidden">
         <Link

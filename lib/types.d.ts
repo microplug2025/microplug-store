@@ -17,6 +17,8 @@ type ProductType = {
   cost: number;
   sizes: [string];
   colors: [string];
+  quantity:number;
+  datasheet:string;
   createdAt: string;
   updatedAt: string;
 };
@@ -29,18 +31,39 @@ type UserType = {
 };
 
 type OrderType = {
-  shippingAddress: Object;
   _id: string;
   customerClerkId: string;
-  products: [OrderItemType]
-  shippingRate: string;
-  totalAmount: number
+  email: string;
+  name: string;
+  products: OrderItemType[];
+  billingDetails?: {
+    firstName?: string;
+    lastName?: string;
+    companyName?: string;
+    townCity?: string;
+    phoneNumber?: string;
+    orderNotes?: string;
+  };
+  shippingDetails?: {
+    shippingMethod?: string;
+    shippingCost?: number;
+  };
+  paymentDetails?: {
+    mpesaName?: string;
+    mobileNumber?: string;
+    transactionCode?: string;
+  };
+  totalAmount: number;
+  createdAt: Date;
 }
 
 type OrderItemType = {
-  product: ProductType;
-  color: string;
-  size: string;
+  product: {
+    _id: string;
+    title: string;
+    price: number;
+  };
+  color?: string;
+  size?: string;
   quantity: number;
-  _id: string;
 }
