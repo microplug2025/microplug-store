@@ -25,7 +25,7 @@ const Navbar = () => {
       </Link>
       <div className="flex gap-4 text-lg sm:text-base">
   <a href="tel:0792753931" className="flex items-center gap-2 sm:gap-0">
-    📞<span className="hidden sm:inline">07992753931</span>
+    📞<span className="hidden sm:inline">0792753931</span>
   </a>
   <a href="mailto:microplug2025@gmail.com" className="flex items-center gap-2 sm:gap-0">
     📧<span className="hidden sm:inline">Email Us</span>
