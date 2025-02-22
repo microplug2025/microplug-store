@@ -8,7 +8,8 @@ const Collections = async () => {
 
   return (
     <div className="flex flex-col items-center gap-10 py-8 px-5 overflow-hidden">
-      <p className="text-heading1-bold">Main categories</p>
+     <p className="text-2xl sm:text-xl xs:text-lg font-bold">Main categories</p>
+
       {!collections || collections.length === 0 ? (
         <p className="text-body-bold">No main categories found</p>
       ) : (
