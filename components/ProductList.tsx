@@ -11,8 +11,8 @@ const ProductList = async () => {
         <p className="text-body-bold">No products found</p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {products.map((product) => (
-            <div key={product._id} className="scale-[0.95] sm:scale-100 transition-transform">
+          {products.map((product:ProductType) => (
+            <div key={product._id} className="sm:scale-100 scale-[0.95] transition-transform">
               <ProductCard product={product} />
             </div>
           ))}
