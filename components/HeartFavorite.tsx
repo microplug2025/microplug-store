@@ -1,10 +1,11 @@
 "use client"
 
+import {  UserType } from "@/lib/types";
 import { useUser } from "@clerk/nextjs";
 import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { ProductType } from "@/lib/types";
 interface HeartFavoriteProps {
   product: ProductType;
   updateSignedInUser?: (updatedUser: UserType) => void;

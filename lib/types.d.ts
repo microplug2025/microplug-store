@@ -1,11 +1,11 @@
-type CollectionType = {
+export type CollectionType = {
   _id: string;
   title: string;
   products: number;
   image: string;
 };
 
-type ProductType = {
+export type ProductType = {
   _id: string;
   title: string;
   description: string;
@@ -21,16 +21,21 @@ type ProductType = {
   datasheet:string;
   createdAt: string;
   updatedAt: string;
+     // Optional fields for enhanced product card features
+  comparePrice?: number;
+  isNew?: boolean;
+  rating?: number;
+  reviewCount?: number;
 };
 
-type UserType = {
+export type UserType = {
   clerkId: string;
   wishlist: [string];
   createdAt: string;
   updatedAt: string;
 };
 
-type OrderType = {
+export type OrderType = {
   _id: string;
   customerClerkId: string;
   email: string;
@@ -57,7 +62,7 @@ type OrderType = {
   createdAt: Date;
 }
 
-type OrderItemType = {
+export type OrderItemType = {
   product: {
     _id: string;
     title: string;

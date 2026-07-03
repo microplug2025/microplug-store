@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { toast } from "react-hot-toast";
 import { persist, createJSONStorage } from "zustand/middleware";
-
+import { ProductType } from "../types";
 interface CartItem {
   item: ProductType;
   quantity: number;

@@ -5,8 +5,10 @@ import HeartFavorite from "./HeartFavorite";
 import { MinusCircle, PlusCircle } from "lucide-react";
 
 import useCart from "@/lib/hooks/useCart";
+import { ProductType } from "@/lib/types";
 
-const ProductInfo = ({ productInfo }: { productInfo: ProductType }) => {
+
+const ProductInfo = ({ productInfo }: { productInfo: ProductType}) => {
   const [selectedColor, setSelectedColor] = useState<string>(productInfo.colors[0] || "");
   const [selectedSize, setSelectedSize] = useState<string>(productInfo.sizes[0] || "");
   const [quantity, setQuantity] = useState<number>(1);
