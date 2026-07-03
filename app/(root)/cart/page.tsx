@@ -15,29 +15,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import Paymentinfo from "@/components/Payment-details";
-// Validation schemas using Zod
-const billingDetailsSchema = z.object({
+
+// Combined validation schema
+const checkoutSchema = z.object({
+  // Billing Details
   firstName: z.string().min(2, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
   companyName: z.string().optional(),
   townCity: z.string().min(3, "Town/City is required"),
   phoneNumber: z.string().min(1, "Phone number is required"),
   orderNotes: z.string().optional(),
-});
-
-const shippingDetailsSchema = z.object({
+  
+  // Shipping Details
   shippingMethod: z.string().min(1, "Please select a shipping method"),
-});
-
-const mpesaPaymentSchema = z.object({
+  
+  // Mpesa Payment Details
   mpesaName: z.string().min(1, "Mpesa Name is required"),
   mobileNumber: z.string().min(1, "Mobile number is required"),
   transactionCode: z.string().min(1, "Transaction code is required"),
 });
 
-type BillingDetailsForm = z.infer<typeof billingDetailsSchema>;
-type ShippingDetailsForm = z.infer<typeof shippingDetailsSchema>;
-type MpesaPaymentForm = z.infer<typeof mpesaPaymentSchema>;
+type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
 const Cart = () => {
   const router = useRouter();
@@ -63,14 +61,8 @@ const Cart = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FieldValues>({
-    resolver: zodResolver(
-      z.object({
-        ...billingDetailsSchema.shape,
-        ...shippingDetailsSchema.shape,
-        ...mpesaPaymentSchema.shape,
-      })
-    ),
+  } = useForm<CheckoutFormData>({
+    resolver: zodResolver(checkoutSchema),
   });
 
   const shippingRates: { [key: string]: number } = {
@@ -89,7 +81,7 @@ const Cart = () => {
     setShippingCost(shippingRates[value] || 0);
   };
 
-  const handleCheckout = async (checkoutData: FieldValues) => {
+  const handleCheckout = async (checkoutData: CheckoutFormData) => {
     try {
       if (!user) {
         router.push("sign-in");
@@ -116,7 +108,7 @@ const Cart = () => {
           },
           totalAmount: totalRounded + shippingCost,
         };
-        // Log the payload before sending it to the backend
+        
         console.log("Data being sent to the backend:", payload);
         console.log("Cart items in state:", cart.cartItems);
 
@@ -133,8 +125,7 @@ const Cart = () => {
           window.location.href = data.url;
         } else {
           console.log("Checkout successful:", data);
-          router.push('/payment_success'); 
-          // Handle success (e.g., show a success message or redirect)
+          router.push('/payment_success');
         }
       }
     } catch (err) {
@@ -144,10 +135,10 @@ const Cart = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setIsSubmitting(true); // Disable button immediately
+  const onSubmit: SubmitHandler<CheckoutFormData> = async (data) => {
+    setIsSubmitting(true);
     await handleCheckout(data);
-    setIsSubmitting(false); // Re-enable button after process
+    setIsSubmitting(false);
   };
 
   const renderError = (fieldError: any) =>
@@ -161,8 +152,6 @@ const Cart = () => {
     }
   };
 
-
-  
   return (
     <div className="flex gap-20 py-16 px-10 max-lg:flex-col max-sm:px-3">
       <div className="w-2/3 max-lg:w-full">
@@ -236,15 +225,14 @@ const Cart = () => {
           <span>ksh {totalRounded}</span>
         </div>
         <button
-  className={`border rounded-lg text-body-bold py-3 w-full ${
-    showCheckoutForm ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-white hover:bg-black hover:text-white"
-  }`}
-  onClick={handleCheckoutClick}
-  disabled={showCheckoutForm}
->
-  {showCheckoutForm ? "Complete the form below" : "Proceed to Checkout"}
-</button>
-
+          className={`border rounded-lg text-body-bold py-3 w-full ${
+            showCheckoutForm ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-white hover:bg-black hover:text-white"
+          }`}
+          onClick={handleCheckoutClick}
+          disabled={showCheckoutForm}
+        >
+          {showCheckoutForm ? "Complete the form below" : "Proceed to Checkout"}
+        </button>
 
         {showCheckoutForm && (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -252,36 +240,64 @@ const Cart = () => {
             <h2 className="text-2xl font-semibold mb-6">Billing Details</h2>
             <div>
               <Label htmlFor="firstName">First Name</Label>
-              <Input id="firstName" {...register("firstName")} placeholder="Enter your first name" className={errors.firstName ? "border-red-500" : ""} />
+              <Input 
+                id="firstName" 
+                {...register("firstName")} 
+                placeholder="Enter your first name" 
+                className={errors.firstName ? "border-red-500" : ""} 
+              />
               {renderError(errors.firstName)}
             </div>
 
             <div>
               <Label htmlFor="lastName">Last Name</Label>
-              <Input id="lastName" {...register("lastName")} placeholder="Enter your last name" className={errors.lastName ? "border-red-500" : ""} />
+              <Input 
+                id="lastName" 
+                {...register("lastName")} 
+                placeholder="Enter your last name" 
+                className={errors.lastName ? "border-red-500" : ""} 
+              />
               {renderError(errors.lastName)}
             </div>
 
             <div>
               <Label htmlFor="companyName">Company Name (Optional)</Label>
-              <Input id="companyName" {...register("companyName")} placeholder="Enter your company name" />
+              <Input 
+                id="companyName" 
+                {...register("companyName")} 
+                placeholder="Enter your company name" 
+              />
             </div>
 
             <div>
               <Label htmlFor="townCity">Town/City</Label>
-              <Input id="townCity" {...register("townCity")} placeholder="Enter your town or city" className={errors.townCity ? "border-red-500" : ""} />
+              <Input 
+                id="townCity" 
+                {...register("townCity")} 
+                placeholder="Enter your town or city" 
+                className={errors.townCity ? "border-red-500" : ""} 
+              />
               {renderError(errors.townCity)}
             </div>
 
             <div>
               <Label htmlFor="phoneNumber">Phone Number</Label>
-              <Input id="phoneNumber" {...register("phoneNumber")} placeholder="Enter your phone number" className={errors.phoneNumber ? "border-red-500" : ""} />
+              <Input 
+                id="phoneNumber" 
+                {...register("phoneNumber")} 
+                placeholder="Enter your phone number" 
+                className={errors.phoneNumber ? "border-red-500" : ""} 
+              />
               {renderError(errors.phoneNumber)}
             </div>
 
             <div>
               <Label htmlFor="orderNotes">Order Notes (Optional)</Label>
-              <Textarea id="orderNotes" {...register("orderNotes")} placeholder="Any additional notes for your order" />
+              <Textarea 
+                id="orderNotes" 
+                {...register("orderNotes")} 
+                placeholder="Any additional notes for your order" 
+              />
             </div>
 
             {/* Shipping Details */}
@@ -310,37 +326,51 @@ const Cart = () => {
               <p className="font-medium">Total with Shipping: KSh{totalRounded + shippingCost}</p>
             </div>
           
-            <Paymentinfo/>
+            <Paymentinfo />
+
             {/* Mpesa Payment Details */}
             <h2 className="text-2xl font-semibold mb-6">Mpesa Payment Details</h2>
             <div>
               <Label htmlFor="mpesaName">Mpesa Name</Label>
-              <Input id="mpesaName" {...register("mpesaName")} placeholder="Enter your Mpesa name" className={errors.mpesaName ? "border-red-500" : ""} />
+              <Input 
+                id="mpesaName" 
+                {...register("mpesaName")} 
+                placeholder="Enter your Mpesa name" 
+                className={errors.mpesaName ? "border-red-500" : ""} 
+              />
               {renderError(errors.mpesaName)}
             </div>
 
             <div>
               <Label htmlFor="mobileNumber">Mobile Phone Number</Label>
-              <Input id="mobileNumber" {...register("mobileNumber")} placeholder="Enter your mobile number" className={errors.mobileNumber ? "border-red-500" : ""} />
+              <Input 
+                id="mobileNumber" 
+                {...register("mobileNumber")} 
+                placeholder="Enter your mobile number" 
+                className={errors.mobileNumber ? "border-red-500" : ""} 
+              />
               {renderError(errors.mobileNumber)}
             </div>
 
             <div>
               <Label htmlFor="transactionCode">Mpesa Transaction Code</Label>
-              <Input id="transactionCode" {...register("transactionCode")} placeholder="Enter the transaction code" className={errors.transactionCode ? "border-red-500" : ""} />
+              <Input 
+                id="transactionCode" 
+                {...register("transactionCode")} 
+                placeholder="Enter the transaction code" 
+                className={errors.transactionCode ? "border-red-500" : ""} 
+              />
               {renderError(errors.transactionCode)}
             </div>
 
-          
-
             <div className="pt-4">
-            <Button
-  type="submit"
-  className="w-full bg-blue-500 text-white"
-  disabled={isSubmitting || cart.cartItems.length === 0} // Disable on submit
->
-  {isSubmitting ? "Processing..." : "Place Order"}
-</Button>
+              <Button
+                type="submit"
+                className="w-full bg-blue-500 text-white"
+                disabled={isSubmitting || cart.cartItems.length === 0}
+              >
+                {isSubmitting ? "Processing..." : "Place Order"}
+              </Button>
             </div>
           </form>
         )}
